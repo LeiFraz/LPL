@@ -1,0 +1,46 @@
+{
+  "name": "examen-integrador",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Desarrollo de una pagina web para un examen final",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeiFraz/LPL.git"
+  },
+  "keywords": [
+    "HTML5",
+    "CSS3",
+    "JavaScript",
+    "PHP",
+    "Ajax"
+  ],
+  "author": "Leonardo Francisco Paz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeiFraz/LPL/issues"
+  },
+  "homepage": "https://github.com/LeiFraz/LPL#readme",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "eslint": "^9.13.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.11.0",
+    "vite": "^5.4.10"
+  }
+  }
