@@ -1,9 +1,11 @@
 import { Outlet as Page } from 'react-router-dom'
+import NavBar from '../../Components/NavBar/NavBar';
 
-function Layout() {
+const Layout = () =>{
 
     return(
         <>
+            {/* <NavBar/> */}
             <Page/>
         </>
     )
