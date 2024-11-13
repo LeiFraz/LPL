@@ -1,7 +1,9 @@
 import { useRoutes } from "react-router-dom"
 import Layout from "../Pages/Layout/layout"
-import Home from "../Pages/Home/Home"
-import Register from "../Pages/Register/Register"
+import Home from "../Pages/Home/Home.jsx"
+import Register from "../Pages/Register/Register.jsx"
+import Login from "../Pages/Login/Login.jsx"
+import HomeUser from "../Pages/Home/HomeUser.jsx"
 
 export const Routes = () => {
 
@@ -10,14 +12,22 @@ export const Routes = () => {
             element: <Layout/>,
             children: [
                 {
-                    path: '/',
-                    element: <Home/>
+                    path: '/inicio',
+                    element: <HomeUser/>
                 },
                 {
                     path: '/registro',
                     element: <Register/>
+                },
+                {
+                    path: '/inicio-sesion',
+                    element: <Login/>
                 }
-            ]
+            ],
+        },
+        {
+            path: '/',
+            element: <Home/>
         }
     ]
     
