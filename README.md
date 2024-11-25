@@ -15,18 +15,10 @@
 
 # Librerias
 
-## Tailwind
+## MaterialUI
 
 Pasos para instalarlo y comenzar a usar
 
-- npm install -D tailwindcss postcss autoprefixer
-- npx tailwindcss init -p
-- Añadir todas las extensiones de archivos a usar en tailwind.config.js
-    - content: [ "./src/**/*.{js,jsx}" ]
-- Añadir las siguientes directivas de tailwind al css principal index.css:
-    - @tailwind base
-    - @tailwind components
-    - @tailwind utilities
-    
-- Ejecutar la herramienta de CLI de tailwind para generar el css
-    - npx tailwindcss -i ./src/input.css -o ./src/output.css --watch
+- npm install @mui/material @emotion/react @emotion/styled
+- npm install @mui/icons-material
+
