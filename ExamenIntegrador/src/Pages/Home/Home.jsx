@@ -1,3 +1,4 @@
+import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -8,13 +9,23 @@ const paginaInicioSesion = () => navigate('/inicio-sesion')
 
     return(
         <>
-            <div className="w-screen m-auto">
-                <button onClick={paginaInicioSesion}> Iniciar Sesion </button>
-                <button className="bg-red-500" onClick={paginaRegistro}> 
-                    Registrarse    
-                </button>
-                <h1> Juego de Adivinanza </h1>
-            </div>
+            <Box sx={{ 
+                display: 'flex',
+                width: '100vw',
+                height: '100vh',
+            }}>
+                <Box sx={{ 
+                    m: 'auto'
+                }}>
+                    <Button onClick={paginaInicioSesion} sx={{
+                        mr: '20px'
+                    }}> 
+                        Iniciar Sesion 
+                    </Button>
+                    <Button onClick={paginaRegistro}> Registrarse </Button>
+                    <h1> Juego de Adivinanza </h1>
+                </Box>
+            </Box>
         </>
     )
 }

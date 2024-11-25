@@ -1,25 +1,32 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import CardRight from '../../Components/Login/CardRight';
 
 
 const Login = () => {
+    const [login, setLogin] = useState(localStorage.getItem('token'))
+    const navigate = useNavigate();
 
+    const pageDashboard = () => navigate('/')
+
+    useEffect(() => {
+        const isLogin = () => {
+            try {
+                if (login){
+                    pageDashboard()
+                }
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        isLogin()
+    },[login])
     return(
         <>
-            <div className="w-screen ">
-                <h1> Inicio de Sesion </h1>
-                <form action="" className="flex flex-col text-left max-w-md mx-auto gap-3 my-4">
-                    <label htmlFor="username">Nombre de Usuario</label>
-                    <input className="w-full p-2 border rounded" type="text" name="username" id="username" minLength="8" placeholder="Ej: JuanHernandez" required/>
-                    
-                    <label htmlFor="contrasenia">Contraseña</label>
-                    <input className="w-full p-2 border rounded" type="password" name="contrasenia" id="contrasenia" minLength="8" required/>
-                    
-                    <button className="w-full bg-red-500">
-                        Acceder
-                    </button>
-                </form>
-            </div>
+            <CardRight />
         </>
     )
 }
-
-export default Login;
+export default Login
