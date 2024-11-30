@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 
-const NavBar = () => {
+const NavBarInicio = () => {
   const navigate = useNavigate();
 
   const iniciarSesion = () => navigate('/inicio-sesion');
@@ -39,22 +39,11 @@ const NavBar = () => {
             },
             color: '#ffffff',
             fontWeight: 'bold'
-          }} onClick={iniciarSesion}>Iniciar Sesion</Button>
-          <Button sx={{
-            width: { xs: '104px',sm: '144px',md: '164px'},
-            height: '28px',
-            borderRadius: '12px',
-            backgroundColor: '#338b85',
-            '&:hover': {
-              backgroundColor: '#005954',
-            },
-            color: '#ffffff',
-            fontWeight: 'bold'
-          }} onClick={registrarse}>Registrarse</Button>
+          }} onClick={() => {console.log('me hiciste click')}}>Cerrar Sesion</Button>
         </Box>
       </Box>
     </>
   );
 };
 
-export default NavBar;
+export default NavBarInicio;

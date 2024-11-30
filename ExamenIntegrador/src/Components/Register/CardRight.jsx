@@ -39,8 +39,8 @@ const CardRight = () => {
             const nombreValido = nameER.test(form.nombreUsuario)
             const emailValido = emailER.test(form.email)
             const contraseniaValida = passwordER.test(form.contrasenia)
-            const fechaNacimientoValida = passwordER.test(form.fechaNacimiento)
-            const paisValido = passwordER.test(form.pais)
+            const fechaNacimientoValida = form.fechaNacimiento
+            const paisValido = form.pais
 
             if (nombreValido && emailValido && contraseniaValida && fechaNacimientoValida && paisValido)
             {
@@ -62,7 +62,7 @@ const CardRight = () => {
                 let msgContrasenia = ''
 
                 if (!nombreValido) {
-                    msgNombreUsuario = 'Nombre de usuario invalido: Debe contener entre 2 - 50 letras incluyendo el espacio.\n\n'
+                    msgNombreUsuario = 'Nombre de usuario invalido: Debe contener entre 8 - 50 letras incluyendo el espacio.\n\n'
                 }
                 if (!emailValido) {
                     msgEmail = 'Email invalido.\n\n'
@@ -102,7 +102,12 @@ const CardRight = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            boxShadow: '0px 0px 4px #000000',
+            '&:hover': {
+                boxShadow: '0px 0px 12px 1px #000000',
+            },
+            transition: 'all .2s ease-out'
         }}>
 
             <Box sx={{
@@ -207,7 +212,7 @@ const CardRight = () => {
                             color: '#000000',
                             border: '1px solid gray',
                             borderRadius: '5px',
-                        }} type='date'/>
+                        }} type='date' onChange={handleForm} name='fechaNacimiento' value={form.fechaNacimiento}/>
                     </Grid2>
 
                 </Grid2>

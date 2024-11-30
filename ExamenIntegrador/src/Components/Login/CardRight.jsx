@@ -12,7 +12,7 @@ const CardRight = () => {
     //para ir al inicio una vez logueado
     const navigate = useNavigate()
     //control de expresiones regulares
-    const emailER = /[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}/
+    const nameER = /^[a-zA-Z ]{8,50}$/
     const contraseniaER = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
     //propio de MaterialUI para la contraseña
@@ -34,11 +34,12 @@ const CardRight = () => {
     const login = async() => 
     {
         try {
-            const nombreUsuarioValido = emailER.test(form.nombreUsuario)
+            const nombreUsuarioValido = nameER.test(form.nombreUsuario)
             const contraseniaValida = contraseniaER.test(form.contrasenia)
 
             if (nombreUsuarioValido && contraseniaValida)
             {
+
                 const response = await servicesAxios.login({
                     nombreUsuario: form.nombreUsuario,
                     contrasenia: form.contrasenia
@@ -82,7 +83,12 @@ const CardRight = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            p: '15px'
+            p: '15px',
+            boxShadow: '0px 0px 4px #000000',
+            '&:hover': {
+                boxShadow: '0px 0px 12px 1px #000000',
+            },
+            transition: 'all .2s ease-out'
         }}>
 
             <Box sx={{
