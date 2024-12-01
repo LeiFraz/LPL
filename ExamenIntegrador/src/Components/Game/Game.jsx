@@ -25,12 +25,12 @@ const Game = ({pauseGame, currentGame, endGame, createX}) => {
                 setIntRealizados(intRealizados + 1)
                 alert('Lo sentimos ah PERDIDO, ustéd no pudo acertar el numero!!!')
                 //PASAR EL TIEMPO
-                endGame(1)
+                endGame(1,clews,numbersRisks)
             } else {
                 if(numberSelected.numeroIngresado === createX){
                     alert('Felicidades ah GANADO, ustéd acertó el numero!!!')
                     //PASAR EL TIEMPO
-                    endGame(0)
+                    endGame(0,clews,numbersRisks)
                 }else{
                     setMsj('El numero  no coincide con X, recuerde chequear las pistas!')
                     setNumberRisk([...numbersRisks,numberSelected.numeroIngresado])
@@ -187,7 +187,7 @@ const Game = ({pauseGame, currentGame, endGame, createX}) => {
                             onChange={handleForm} 
                             size='small'></TextField>
                             <Button size='small' onClick={test}> Intentar</Button>
-                            <Button size='small' onClick={() => pauseGame()}> Pausar Partida</Button>
+                            <Button size='small' onClick={() => pauseGame(clews,numbersRisks)}> Pausar Partida</Button>
                         </Box>
                     </Box>
 

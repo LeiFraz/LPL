@@ -18,6 +18,8 @@ const HomeUser = () => {
     const [createX, setCreateX] = useState(0)
     //dificultad seleccionada
     const [gameConfig, setGameConfig] = useState({difficulty: 0})
+    //juego seleccionado
+    const [gameSelected, setGameSelected] = useState({id: 0, numero: 0})
     //habilitar o deshabilitar botones
     const [disableButtonStartGame, setDisableButtonStartGame] = useState(false)
     const [disableButtonContinueGame, setDisableButtonContinueGame] = useState(false)
@@ -35,6 +37,12 @@ const HomeUser = () => {
     const handleForm = (e) => {
         const { name, value } = e.target;
         setGameConfig((input) => ({...input, [name]: value}));
+    }
+
+    //obtener el juego seleccionado
+    const handleSelectGame = (e) => {
+        const { name, value } = e.target;
+        setGameSelected((input) => ({...input, [name]: value}));
     }
 
     const cancelStartGame = () => {
@@ -76,7 +84,7 @@ const HomeUser = () => {
     }
 
     //pausar el juego y guardarlo
-    const pauseGame = async() => {
+    const pauseGame = async(clews, numbersRisks) => {
         //habilitamos los botones
         try {
             setDisableButtonStartGame(false)
@@ -93,9 +101,11 @@ const HomeUser = () => {
             if (localStorage.getItem('idJuego'))
             {
                 data = {
-                    idJuego: localStorage.getItem('idJuego'),
+                    juego_id: localStorage.getItem('idJuego'),
                     // dificultad: localStorage.getItem('difficulty'),
                     estado: 'pausado',
+                    pistas: clews,
+                    numerosArriesgados: numbersRisks
                     // numero: createX
                     // 'inicio' => Hash::make($request->contrasenia),
                     // 'fin' => $request->fechaNacimiento,
@@ -107,7 +117,9 @@ const HomeUser = () => {
                     nombreUsuario: localStorage.getItem('nombreUsuario'),
                     dificultad: localStorage.getItem('difficulty'),
                     estado: 'pausado',
-                    numero: createX
+                    numero: createX,
+                    pistas: clews,
+                    numerosArriesgados: numbersRisks
                     // 'inicio' => Hash::make($request->contrasenia),
                     // 'fin' => $request->fechaNacimiento,
                 }
@@ -121,7 +133,7 @@ const HomeUser = () => {
     }
 
     //guardar el juego por que finalizó
-    const endGame = async(winOrDefeat) => {
+    const endGame = async(winOrDefeat,clews,numbersRisks) => {
         try {
             let data;
             switch (winOrDefeat) {
@@ -132,7 +144,9 @@ const HomeUser = () => {
                         nombreUsuario: localStorage.getItem('nombreUsuario'),
                         dificultad: localStorage.getItem('difficulty'),
                         estado: 'gano',
-                        numero: createX
+                        numero: createX,
+                        pistas: clews,
+                        numerosArriesgados: numbersRisks
                         // 'inicio' => Hash::make($request->contrasenia),
                         // 'fin' => $request->fechaNacimiento,
                     }
@@ -143,7 +157,9 @@ const HomeUser = () => {
                         nombreUsuario: localStorage.getItem('nombreUsuario'),
                         dificultad: localStorage.getItem('difficulty'),
                         estado: 'perdio',
-                        numero: createX
+                        numero: createX,
+                        pistas: clews,
+                        numerosArriesgados: numbersRisks
                         // 'inicio' => Hash::make($request->contrasenia),
                         // 'fin' => $request->fechaNacimiento,
                     }
@@ -161,25 +177,45 @@ const HomeUser = () => {
         }
     }
 
-    //seleccionar partida guardada
+    //mostrar partidas guardadas
     const selectedGameSave = async() => {
         setSelectGame(true)
         const response = await servicesAxios.searchGames(localStorage.getItem('nombreUsuario'))
         setGameSaves(response)
     }
+    //cancelar vista
     const cancelGameSave = async() => {
         setSelectGame(false)
     }
+    //continuar juego guardado
+    const continueGame = () => {
+        //createX se reemplaza, setCreateX(Math.round(Math.random() * (2999 - 1000 + 1) + 1000))
+        if (gameSelected.id === '---'){
+
+        }else{
+            setCreateX(gameSelected.numero)
+            localStorage.setItem('idJuego', gameSelected.id)
+    
+            setSelectGame(false)
+    
+            //deshabilitar botones
+            setDisableButtonStartGame(true)
+            setDisableButtonContinueGame(true)
+            setDisableButtonStatistics(true)
+    
+            //mostrar el juego
+            setCurrentGame(true);
+        }
+    }
+
     //Estado para mostrar u ocultar la dificultad
     useEffect(() =>{
-
     }, [initialize])
     //Estado para mostrar u ocultar el juego
     useEffect(() =>{
     }, [currentGame])
     //Estado para mostrar u ocultar la dificultad
     useEffect(() =>{
-
     }, [selectGame])
     return (
         <>
@@ -197,9 +233,39 @@ const HomeUser = () => {
                     }}> Este es el mensaje de la ultima partida</Typography>
                 </Box>
                 <Box>
-                    <Button size='small' disabled={disableButtonStartGame} onClick={selectDifficulty}> Iniciar Partida</Button>
-                    <Button size='small' disabled={disableButtonContinueGame} onClick={selectedGameSave}> Retomar Partida</Button>
-                    <Button size='small' disabled={disableButtonStatistics} onClick={console.log()}> Estadisticas Personales</Button>
+                    <Button sx={{
+                        width: { xs: '104px',sm: '144px',md: '164px'},
+                        height: '28px',
+                        borderRadius: '12px',
+                        backgroundColor: '#338b85',
+                        '&:hover': {
+                        backgroundColor: '#005954',
+                        },
+                        color: '#ffffff',
+                        fontWeight: 'bold'
+                    }} size='small' disabled={disableButtonStartGame} onClick={selectDifficulty}> Iniciar Partida</Button>
+                    <Button sx={{
+                        width: { xs: '104px',sm: '144px',md: '164px'},
+                        height: '28px',
+                        borderRadius: '12px',
+                        backgroundColor: '#338b85',
+                        '&:hover': {
+                        backgroundColor: '#005954',
+                        },
+                        color: '#ffffff',
+                        fontWeight: 'bold'
+                    }} size='small' disabled={disableButtonContinueGame} onClick={selectedGameSave}> Retomar Partida</Button>
+                    <Button sx={{
+                        width: { xs: '104px',sm: '144px',md: '164px'},
+                        height: '28px',
+                        borderRadius: '12px',
+                        backgroundColor: '#338b85',
+                        '&:hover': {
+                        backgroundColor: '#005954',
+                        },
+                        color: '#ffffff',
+                        fontWeight: 'bold'
+                    }} size='small' disabled={disableButtonStatistics} onClick={console.log()}> Estadisticas Personales</Button>
                 </Box>
                 {initialize ? (
                     <Box>
@@ -222,8 +288,28 @@ const HomeUser = () => {
                                 <MenuItem value={2}>alto</MenuItem>
                             </Select>
                         </FormControl>
-                        <Button onClick={startGame}> Comenzar Juego</Button>
-                        <Button onClick={cancelStartGame}> Cancelar</Button>
+                        <Button sx={{
+                            width: { xs: '104px',sm: '144px',md: '164px'},
+                            height: '28px',
+                            borderRadius: '12px',
+                            backgroundColor: '#338b85',
+                            '&:hover': {
+                            backgroundColor: '#005954',
+                            },
+                            color: '#ffffff',
+                            fontWeight: 'bold'
+                        }} onClick={startGame}> Comenzar Juego</Button>
+                        <Button sx={{
+                            width: { xs: '104px',sm: '144px',md: '164px'},
+                            height: '28px',
+                            borderRadius: '12px',
+                            backgroundColor: '#338b85',
+                            '&:hover': {
+                            backgroundColor: '#005954',
+                            },
+                            color: '#ffffff',
+                            fontWeight: 'bold'
+                        }} onClick={cancelStartGame}> Cancelar</Button>
                     </Box>
                 ) : (
                     <></>
@@ -239,23 +325,43 @@ const HomeUser = () => {
                             <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            value={gameConfig.difficulty}
-                            label="difficulty"
-                            name="difficulty"
-                            onChange={handleForm}
+                            value={gameSelected.id}
+                            label="selectGame"
+                            name="selectGame"
+                            onChange={handleSelectGame}
                             sx={{textAlign: 'left'}}
                             >
-                            {gamesSaves.length > 0 ? (
+                            {gamesSaves? (
                                 gamesSaves.map((element, index) => (
                                     <MenuItem key={index} value={element.id}>{'Juego ' + index+1}</MenuItem>
                                 ))
                             ) : (
-                                <MenuItem value={0}>bajo</MenuItem>
+                                <MenuItem value={'---'}>---</MenuItem>
                             )}
                             </Select>
                         </FormControl>
-                        <Button onClick={continueGame}> Comenzar Juego</Button>
-                        <Button onClick={cancelGameSave}> Cancelar</Button>
+                        <Button sx={{
+                            width: { xs: '104px',sm: '144px',md: '164px'},
+                            height: '28px',
+                            borderRadius: '12px',
+                            backgroundColor: '#338b85',
+                            '&:hover': {
+                            backgroundColor: '#005954',
+                            },
+                            color: '#ffffff',
+                            fontWeight: 'bold'
+                        }} onClick={continueGame}> Continuar Juego</Button>
+                        <Button sx={{
+                            width: { xs: '104px',sm: '144px',md: '164px'},
+                            height: '28px',
+                            borderRadius: '12px',
+                            backgroundColor: '#338b85',
+                            '&:hover': {
+                            backgroundColor: '#005954',
+                            },
+                            color: '#ffffff',
+                            fontWeight: 'bold'
+                        }} onClick={cancelGameSave}> Cancelar</Button>
                     </Box>
                 ) : (
                     <></>

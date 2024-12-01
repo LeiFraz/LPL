@@ -60,7 +60,7 @@ const servicesAxios = {
 	searchGames: async (nombreUsuario) => {
 		try {
 			//buscar las partidas pendientes
-			const response = await apiClient.put(`/`,nombreUsuario)
+			const response = await apiClient.get(`/buscarJuego`,nombreUsuario)
 			return response.data
 		} catch (error) {
 			console.log(error, error.response.data.message)
