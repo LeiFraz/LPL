@@ -39,16 +39,16 @@ const CardRight = () => {
 
             if (nombreUsuarioValido && contraseniaValida)
             {
-
+                
                 const response = await servicesAxios.login({
                     nombreUsuario: form.nombreUsuario,
                     contrasenia: form.contrasenia
                 })
-    
+                console.log(response)
                 if(response)
                 {
                     localStorage.setItem('token', response.token)
-                    localStorage.setItem('nombreUsuario', response.data.nombreUsuario)
+                    localStorage.setItem('nombreUsuario', response.nombreUsuario)
                     
                     console.log('Inicio de sesion exitoso')
     

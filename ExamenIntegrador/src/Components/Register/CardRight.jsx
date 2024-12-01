@@ -47,7 +47,9 @@ const CardRight = () => {
                 const response = await servicesAxios.register({
                     nombreUsuario: form.nombreUsuario,
                     email: form.email,
-                    contrasenia: form.contrasenia
+                    contrasenia: form.contrasenia,
+                    pais: form.pais,
+                    fechaNacimiento: form.fechaNacimiento
                 })
 
                 if(response)
@@ -76,20 +78,6 @@ const CardRight = () => {
             console.error('No se pudo iniciar sesion ', error.message)
         }
     }
-    
-    //renderizado continuo, para que cargue los paises
-    useEffect(() => {
-        const traerPaises = async() => {
-            try {
-                const response = await servicesAxios.traerPaises()
-                setPaises(response)
-            } catch (error) {
-                console.error(error)
-            }
-        }
-
-        traerPaises();
-    }, [paises])
 
     return(
         <Box sx={{
@@ -141,32 +129,13 @@ const CardRight = () => {
                             border: '1px #DCDBDD',
                         }}/>
                     </Grid2>
-
+                    
                     <Grid2 size={{xs: 12, sm: 6, md: 6}}>
-
-                        <FormControl size='small' sx={{
+                        <TextField label="pais" size='small' variant='outlined' name="pais" value={form.pais} onChange={handleForm} sx={{
                             width: {xs: '100%', sm: '140px', md: '180px'},
                             height: '48px',
-                        }}>
-                            <InputLabel id="demo-simple-select-label">Seleccione Pais</InputLabel>
-                            <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={form.pais}
-                            label="pais"
-                            name="pais"
-                            onChange={handleForm}
-                            sx={{textAlign: 'left'}}
-                            >
-                                { paises.length > 0 ? (
-                                    paises.map((pais, index) => (
-                                        <MenuItem key={index} value={pais.name}>{pais.name}</MenuItem>
-                                    ))
-                                ) : (
-                                    <MenuItem value={'---'}>{'---'}</MenuItem>
-                                )}
-                            </Select>
-                        </FormControl>
+                            border: '1px #DCDBDD',
+                        }}/>
                     </Grid2>
 
                     <Grid2 size={{xs: 12, sm: 6, md: 6}}>

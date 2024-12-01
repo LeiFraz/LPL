@@ -1,11 +1,16 @@
 import { Box, Button, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
+import servicesAxios from '../../Services/axios';
 
 const NavBarInicio = () => {
   const navigate = useNavigate();
 
-  const iniciarSesion = () => navigate('/inicio-sesion');
-  const registrarse = () => navigate('/registro');
+  const cerrarSesion = async() => {
+    const response = await servicesAxios.cerrarSesion();
+    console.log(response)
+    localStorage.clear();
+    navigate('/registro')
+  }
 
   return (
     <>
@@ -39,7 +44,7 @@ const NavBarInicio = () => {
             },
             color: '#ffffff',
             fontWeight: 'bold'
-          }} onClick={() => {console.log('me hiciste click')}}>Cerrar Sesion</Button>
+          }} onClick={cerrarSesion}>Cerrar Sesion</Button>
         </Box>
       </Box>
     </>

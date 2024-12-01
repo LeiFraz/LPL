@@ -3,49 +3,64 @@ import apiClient from './apiClient'
 
 const servicesAxios = {
 
-	login: async form => {
-		try {
-			const response = await apiClient.post(`/api/user/login`, form)
-			return response.data
-		} catch (error) {
-			console.log(error,error.response.data.message)
-		}
-	},
 	register: async(user)=>{
 		try {
-			const response = await apiClient.post(`/api/user/registro`,user)
+			const response = await apiClient.post(`/registro`,user)
 			return response.data
 		} catch (error) {
 			console.log(error,error.response.data.message)
 		}	
 	},
-	createPlant: async form => {
+	login: async form => {
 		try {
-			const response = await apiClient.post(`/api/plants/create`, form)
+			const response = await apiClient.post(`/iniciarSesion`, form)
+
+			return response.data
+		} catch (error) {
+			console.log(error,error.response.data.message)
+		}
+	},
+	cerrarSesion: async() => {
+		try {
+			const response = await apiClient.post(`/cerrarSesion`)
+			localStorage.clear();
+			return response.data
+		} catch (error) {
+			console.log(error,error.response.data.message)
+		}
+	},
+	countCurrentGames: async planta => {
+		try {
+			//Si posee 3 partidas pendientes no debe poder iniciar un nuevo juego
+			const response = await apiClient.put(`/cantidadJuegos`, planta)
 			return response.data
 		} catch (error) {
 			console.log(error, error.response.data.message)
 		}
 	},
-	deletePlant: async id => {
+	saveGame: async form => {
 		try {
-			const response = await apiClient.delete(`/api/plants/delete/${id}`)
+			//guardar de acuerdo a los datos que te traen, se crea un ID
+			const response = await apiClient.post(`/guardarJuego`,form)
 			return response.data
 		} catch (error) {
 			console.log(error, error.response.data.message)
 		}
 	},
-	editPlant: async planta => {
+	savePauseGame: async form => {
 		try {
-			const response = await apiClient.put(`/api/plants/edit`, planta)
+			//cuando se retoma un juego se guarda desde aqui
+			//Si tiene id lo guardo con ese ID, sino se crea una partida SaveGame
+			const response = await apiClient.post(`/guardarJuegoPausado`, form)
 			return response.data
 		} catch (error) {
 			console.log(error, error.response.data.message)
 		}
 	},
-	traerPaises: async() => {
+	searchGames: async (nombreUsuario) => {
 		try {
-			const response = await apiClient.get(`/api/paises`)
+			//buscar las partidas pendientes
+			const response = await apiClient.put(`/`,nombreUsuario)
 			return response.data
 		} catch (error) {
 			console.log(error, error.response.data.message)
