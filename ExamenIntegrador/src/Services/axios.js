@@ -41,6 +41,7 @@ const servicesAxios = {
 	saveGame: async form => {
 		try {
 			//guardar de acuerdo a los datos que te traen, se crea un ID
+			console.log(form)
 			const response = await apiClient.post(`/guardarJuego`,form)
 			return response.data
 		} catch (error) {
@@ -57,10 +58,10 @@ const servicesAxios = {
 			console.log(error, error.response.data.message)
 		}
 	},
-	searchGames: async (nombreUsuario) => {
+	searchGames: async nombreUsuario => {
 		try {
 			//buscar las partidas pendientes
-			const response = await apiClient.get(`/buscarJuego`,nombreUsuario)
+			const response = await apiClient.get(`/buscarJuego?nombreUsuario=${nombreUsuario}`)
 			return response.data
 		} catch (error) {
 			console.log(error, error.response.data.message)

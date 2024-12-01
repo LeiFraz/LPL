@@ -3,8 +3,6 @@ import { Box, Typography } from "@mui/material";
 
 const Clew = ({clews}) => {
 
-    // console.log(clews)
-
     return (
         <>
             <Box sx={{
@@ -35,9 +33,9 @@ const Clew = ({clews}) => {
                         textAlign: 'left'
                     }}> Pistas </Typography>
                     <Box>
-                        {clews.length ? (
+                        {clews.length > 0 ? (
                             clews.map((element,index) => (
-                                <Typography key={index} sx={{color: '#000000'}}> {element} </Typography>
+                                <Typography key={index} sx={{color: '#000000'}}> {localStorage.getItem('idJuego') ? element.descripcion : element } </Typography>
                             ))
                         ) : (
                             <></>

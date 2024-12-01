@@ -19,7 +19,7 @@ const HomeUser = () => {
     //dificultad seleccionada
     const [gameConfig, setGameConfig] = useState({difficulty: 0})
     //juego seleccionado
-    const [gameSelected, setGameSelected] = useState({id: 0, numero: 0})
+    const [gameSelected, setGameSelected] = useState({id: '', numero: 0})
     //habilitar o deshabilitar botones
     const [disableButtonStartGame, setDisableButtonStartGame] = useState(false)
     const [disableButtonContinueGame, setDisableButtonContinueGame] = useState(false)
@@ -31,6 +31,7 @@ const HomeUser = () => {
     const selectDifficulty = () => {
         //mostrar la dificultad
         setInitilize(true)
+        setSelectGame(false)
     }
 
     //obtener la dificultad seleccionada
@@ -41,8 +42,11 @@ const HomeUser = () => {
 
     //obtener el juego seleccionado
     const handleSelectGame = (e) => {
-        const { name, value } = e.target;
-        setGameSelected((input) => ({...input, [name]: value}));
+        // const { name, value } = e.target;
+        // setGameSelected((input) => ({...input, [name]: value}));
+        const { value } = e.target;
+        const selectedGame = gamesSaves.find(game => game.id === value);
+        setGameSelected(selectedGame || { id: '', numero: 0 });
     }
 
     const cancelStartGame = () => {
@@ -84,7 +88,7 @@ const HomeUser = () => {
     }
 
     //pausar el juego y guardarlo
-    const pauseGame = async(clews, numbersRisks) => {
+    const pauseGame = async(allClews, numbersRisks, intRealizados, intRestantes) => {
         //habilitamos los botones
         try {
             setDisableButtonStartGame(false)
@@ -104,12 +108,15 @@ const HomeUser = () => {
                     juego_id: localStorage.getItem('idJuego'),
                     // dificultad: localStorage.getItem('difficulty'),
                     estado: 'pausado',
-                    pistas: clews,
-                    numerosArriesgados: numbersRisks
+                    pistas: allClews,
+                    numerosArriesgados: numbersRisks,
+                    intRealizados: intRealizados,
+                    intRestantes: intRestantes
                     // numero: createX
                     // 'inicio' => Hash::make($request->contrasenia),
                     // 'fin' => $request->fechaNacimiento,
                 }
+                localStorage.removeItem('idJuego')
                 const response = await servicesAxios.savePauseGame(data)
                 console.log(response)
             }else{
@@ -118,8 +125,10 @@ const HomeUser = () => {
                     dificultad: localStorage.getItem('difficulty'),
                     estado: 'pausado',
                     numero: createX,
-                    pistas: clews,
-                    numerosArriesgados: numbersRisks
+                    pistas: allClews,
+                    numerosArriesgados: numbersRisks,
+                    intRealizados: intRealizados,
+                    intRestantes: intRestantes
                     // 'inicio' => Hash::make($request->contrasenia),
                     // 'fin' => $request->fechaNacimiento,
                 }
@@ -133,45 +142,92 @@ const HomeUser = () => {
     }
 
     //guardar el juego por que finalizó
-    const endGame = async(winOrDefeat,clews,numbersRisks) => {
+    const endGame = async(winOrDefeat,allClews,numbersRisks,intRealizados,intRestantes) => {
         try {
             let data;
             switch (winOrDefeat) {
                 case 0:
                     //Comprobar si idJuego EXISTE en LOCALSTORAGE para guardarlo de otra manera
                     console.log('tiempo')
-                    data = {
-                        nombreUsuario: localStorage.getItem('nombreUsuario'),
-                        dificultad: localStorage.getItem('difficulty'),
-                        estado: 'gano',
-                        numero: createX,
-                        pistas: clews,
-                        numerosArriesgados: numbersRisks
-                        // 'inicio' => Hash::make($request->contrasenia),
-                        // 'fin' => $request->fechaNacimiento,
+                    if(localStorage.getItem('idJuego')){
+                        data = {
+                            idJuego: localStorage.getItem('idJuego'),
+                            // dificultad: localStorage.getItem('difficulty'),
+                            estado: 'gano',
+                            pistas: allClews,
+                            numerosArriesgados: numbersRisks,
+                            intRealizados: intRealizados,
+                            intRestantes: intRestantes
+                            // numero: createX
+                            // 'inicio' => Hash::make($request->contrasenia),
+                            // 'fin' => $request->fechaNacimiento,
+                        }
+                        console.log(data)
+                        localStorage.removeItem('idJuego')
+                        const response = await servicesAxios.savePauseGame(data)
+                        console.log(response)
+                        ranking()
+                    }else{
+                        data = {
+                            nombreUsuario: localStorage.getItem('nombreUsuario'),
+                            dificultad: localStorage.getItem('difficulty'),
+                            estado: 'gano',
+                            numero: createX,
+                            pistas: allClews,
+                            numerosArriesgados: numbersRisks,
+                            intRealizados: intRealizados,
+                            intRestantes: intRestantes
+                            // 'inicio' => Hash::make($request->contrasenia),
+                            // 'fin' => $request->fechaNacimiento,
+                        }
+                        const response = await servicesAxios.saveGame(data)
+                        console.log(response)
+                        ranking()
                     }
 
                     break;
                 case 1:
-                    data = {
-                        nombreUsuario: localStorage.getItem('nombreUsuario'),
-                        dificultad: localStorage.getItem('difficulty'),
-                        estado: 'perdio',
-                        numero: createX,
-                        pistas: clews,
-                        numerosArriesgados: numbersRisks
-                        // 'inicio' => Hash::make($request->contrasenia),
-                        // 'fin' => $request->fechaNacimiento,
+                    if(localStorage.getItem('idJuego')){
+                        data = {
+                            idJuego: localStorage.getItem('idJuego'),
+                            // dificultad: localStorage.getItem('difficulty'),
+                            estado: 'perdio',
+                            pistas: allClews,
+                            numerosArriesgados: numbersRisks,
+                            intRealizados: intRealizados,
+                            intRestantes: intRestantes
+                            // numero: createX
+                            // 'inicio' => Hash::make($request->contrasenia),
+                            // 'fin' => $request->fechaNacimiento,
+                        }
+                        localStorage.removeItem('idJuego')
+                        const response = await servicesAxios.savePauseGame(data)
+                        console.log(response)
+                        ranking()
+                    }else{
+                        data = {
+                            nombreUsuario: localStorage.getItem('nombreUsuario'),
+                            dificultad: localStorage.getItem('difficulty'),
+                            estado: 'perdio',
+                            numero: createX,
+                            pistas: allClews,
+                            numerosArriesgados: numbersRisks,
+                            intRealizados: intRealizados,
+                            intRestantes: intRestantes
+                            // 'inicio' => Hash::make($request->contrasenia),
+                            // 'fin' => $request->fechaNacimiento,
+                        }
+                        const response = await servicesAxios.saveGame(data)
+                        console.log(response)
+                        ranking()
                     }
                 break;
                 
                 default:
                     break;
             }
-
-            const response = await servicesAxios.saveGame(data)
-            console.log(response)
-            ranking()
+            
+            
         } catch (error) {
             console.log(error)
         }
@@ -179,9 +235,12 @@ const HomeUser = () => {
 
     //mostrar partidas guardadas
     const selectedGameSave = async() => {
+        const nombreUsuarioStorage = localStorage.getItem('nombreUsuario')
+        const response = await servicesAxios.searchGames(nombreUsuarioStorage)
+        // console.log(response.juego)
+        setGameSaves(response.juego)
         setSelectGame(true)
-        const response = await servicesAxios.searchGames(localStorage.getItem('nombreUsuario'))
-        setGameSaves(response)
+        setInitilize(false)
     }
     //cancelar vista
     const cancelGameSave = async() => {
@@ -189,13 +248,15 @@ const HomeUser = () => {
     }
     //continuar juego guardado
     const continueGame = () => {
-        //createX se reemplaza, setCreateX(Math.round(Math.random() * (2999 - 1000 + 1) + 1000))
-        if (gameSelected.id === '---'){
+
+        if (gameSelected.id === ''){
 
         }else{
             setCreateX(gameSelected.numero)
+
             localStorage.setItem('idJuego', gameSelected.id)
-    
+            localStorage.setItem('difficulty', gameSelected.dificultad)
+
             setSelectGame(false)
     
             //deshabilitar botones
@@ -325,18 +386,18 @@ const HomeUser = () => {
                             <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            value={gameSelected.id}
+                            value={gameSelected.id || ''}
                             label="selectGame"
                             name="selectGame"
                             onChange={handleSelectGame}
                             sx={{textAlign: 'left'}}
                             >
-                            {gamesSaves? (
-                                gamesSaves.map((element, index) => (
-                                    <MenuItem key={index} value={element.id}>{'Juego ' + index+1}</MenuItem>
+                            {gamesSaves.length > 0? (
+                                gamesSaves.map((element) => (
+                                    <MenuItem key={element.id} value={element.id}>{'Juego ' + element.id}</MenuItem>
                                 ))
                             ) : (
-                                <MenuItem value={'---'}>---</MenuItem>
+                                <MenuItem value="" disabled> No hay partidas guardadas </MenuItem>
                             )}
                             </Select>
                         </FormControl>
@@ -368,7 +429,7 @@ const HomeUser = () => {
                 )}
 
                 { currentGame? (
-                    <Game pauseGame={pauseGame} currentGame={currentGame} endGame={endGame} createX={createX}/>
+                    <Game pauseGame={pauseGame} currentGame={currentGame} endGame={endGame} createX={createX} gameSelected={gameSelected}/>
                 ) : (
                     <></>
                 )

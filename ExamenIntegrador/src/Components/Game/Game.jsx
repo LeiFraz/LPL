@@ -2,19 +2,19 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import Clew from "../../Components/Game/Clew";
 import { useEffect, useState } from "react";
 
-const Game = ({pauseGame, currentGame, endGame, createX}) => {
+const Game = ({pauseGame, currentGame, endGame, createX, gameSelected}) => {
     //si currentGame es verdadero, el juego empieza a contar tiempo y todo
 
     //numero que escribió el usuario
     const [numberSelected, setNumberSelected] = useState({numeroIngresado: 0})
-    const [intRealizados, setIntRealizados] = useState(0)
-    const [intRestantes, setIntRestantes] = useState(12)
+    const [intRealizados, setIntRealizados] = useState(localStorage.getItem('idJuego') ? gameSelected.intRealizados : 0)
+    const [intRestantes, setIntRestantes] = useState(localStorage.getItem('idJuego') ? gameSelected.intRestantes : 12)
     const [msj, setMsj] = useState('')
     const [numbersRisks, setNumberRisk] = useState([])
     
     //guardo todas las pistas
-    const [clews, setClews] = useState([])
-    const [allClews, setAllClews] = useState([])
+    const [clews, setClews] = useState(localStorage.getItem('idJuego') ? gameSelected.pistas[gameSelected.pistas.length-1] :[])
+    const [allClews, setAllClews] = useState(localStorage.getItem('idJuego') ? gameSelected.pistas :[])
     //compruebo si hay cambios en las pistas
     const [newClew, setNewClew] = useState(false)
 
@@ -25,12 +25,12 @@ const Game = ({pauseGame, currentGame, endGame, createX}) => {
                 setIntRealizados(intRealizados + 1)
                 alert('Lo sentimos ah PERDIDO, ustéd no pudo acertar el numero!!!')
                 //PASAR EL TIEMPO
-                endGame(1,clews,numbersRisks)
+                endGame(1,allClews,numbersRisks,intRealizados,intRestantes)
             } else {
                 if(numberSelected.numeroIngresado === createX){
                     alert('Felicidades ah GANADO, ustéd acertó el numero!!!')
                     //PASAR EL TIEMPO
-                    endGame(0,clews,numbersRisks)
+                    endGame(0,allClews,numbersRisks,intRealizados,intRestantes)
                 }else{
                     setMsj('El numero  no coincide con X, recuerde chequear las pistas!')
                     setNumberRisk([...numbersRisks,numberSelected.numeroIngresado])
@@ -49,6 +49,7 @@ const Game = ({pauseGame, currentGame, endGame, createX}) => {
 
     useEffect(() => {
         //para que se rendericen las pistas
+        console.log(allClews)
         switch (intRealizados) {
             case 0:
                 setNewClew(true)
@@ -172,7 +173,7 @@ const Game = ({pauseGame, currentGame, endGame, createX}) => {
                             <Typography sx={{
                                 color: '#000000'
                             }}> 
-                                {clews.join(',')}
+                                {localStorage.getItem('idJuego') ? clews.descripcion: clews.join(', ')}
                             </Typography>
                         </Box>
                         <Box sx={{
@@ -187,7 +188,7 @@ const Game = ({pauseGame, currentGame, endGame, createX}) => {
                             onChange={handleForm} 
                             size='small'></TextField>
                             <Button size='small' onClick={test}> Intentar</Button>
-                            <Button size='small' onClick={() => pauseGame(clews,numbersRisks)}> Pausar Partida</Button>
+                            <Button size='small' onClick={() => pauseGame(allClews,numbersRisks,intRealizados,intRestantes)}> Pausar Partida</Button>
                         </Box>
                     </Box>
 
